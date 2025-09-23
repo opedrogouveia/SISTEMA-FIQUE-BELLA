@@ -1,35 +1,39 @@
-const authService = require('../repositories/auth-repository');
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
+import authRepository from "../repositories/auth-repository.js";
+import supabase from "../database/public-connection.js";
+import jwt from "jsonwebtoken";
 
-async function login(email, senha) {
+const secretKey = process.env.JWT_SECRET;
+
+async function login(user) {
     try {
-        const user = await authService.findByEmail(email);
-        if (!user) {
-            throw new Error("Email inválido.");
-        }
-        const isPasswordValid = await bcrypt.compare(senha, user.senha);
-        if (!isPasswordValid) {
-            throw new Error("Senha inválida.");
-        }
-        const token = jwt.sign({ id:user.id }, '123456', { expiresIn: "1h" });
-        return token;
+        const authUser = await authRepository.signIn(user);
+        return authUser;
     } catch (err) {
         throw err;
     }
-};
+}
 
-async function registerUser(nome, email, senha) {
-    try {
-        const hashedPassword = await bcrypt.hash(senha, 10); //criptografa a senha
-        const newUser = authService.createUser(nome, email, hashedPassword);
-        return newUser;
-    } catch (err) {
-        console.log(err);
+async function register(user) {
+    if (!user || !user.nome || !user.email || !user.senha) {
+        const err = new Error("Preencha todos os campos.");
+        err.status = 400;
+        throw err;
     }
+    try {
+        return await authRepository.register(user);
+    } catch (err) {
+        err.status = err.status || 500;
+        throw err;
+    }
+}
+
+
+const authService = {
+    login,
+    register,
+    update,
+    remove
 };
 
-module.exports = {
-    login,
-    registerUser
-};
+
+export default authService;

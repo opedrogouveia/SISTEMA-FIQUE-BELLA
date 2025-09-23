@@ -1,26 +1,59 @@
-const db = require('../database/connection');
+import supabasePublic from "../database/public-connection.js";
+import supabaseAdmin from "../database/admin-connection.js";
 
-async function findByEmail(email) {
+async function signIn(user) {
     try {
-        const query = "SELECT * FROM usuarios WHERE email = $1";
-        const result = await db.query(query, [email]);
-        return result.rows[0];
+        const { data: authUser, error } =
+            await supabasePublic.auth.signInWithPassword({
+                email: user.email,
+                password: user.senha,
+            });
+        if (error) {
+            throw error;
+        }
+        return authUser;
     } catch (err) {
         throw err;
     }
-};
+}
 
-async function createUser(nome, email, hashedPassword) {
+async function register(user) {
     try {
-        const query = "INSERT INTO usuarios (nome, email, senha) VALUES ($1, $2, $3) RETURNING id";
-        const result = await db.query(query, [nome, email, hashedPassword]);
-        return result.rows[0];
+        const { data: authData, error: authError } =
+            await supabasePublic.auth.signUp({
+                email: user.email,
+                password: user.senha,
+            });
+        if (authError) {
+            throw authError;
+        }
+
+        user.usuario_id = authData.user.id;
+        const { senha, ...userData } = user;
+
+        const { data, error } = await supabasePublic
+            .from("usuarios")
+            .insert(userData);
+        if (error) {
+            const { error: deleteError } =
+                await supabaseAdmin.auth.admin.deleteUser(authData.user.id); // CASO O INSERT FALHE, DELETA O USUÁRIO DO auth.users
+            if (deleteError) {
+                throw deleteError;
+            }
+            throw error;
+        }
+        return authData.user;
     } catch (err) {
         throw err;
     }
+}
+
+
+const authRepository = {
+    signIn,
+    register,
+    update,
+    remove
 };
 
-module.exports = {
-    findByEmail,
-    createUser
-};
+export default authRepository;

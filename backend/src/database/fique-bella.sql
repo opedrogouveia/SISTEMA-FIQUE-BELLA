@@ -19,7 +19,7 @@ CREATE TABLE servicos (
   descricao TEXT,
   preco DECIMAL(10, 2) NOT NULL
 );
-
+  
 INSERT INTO clientes (nome, telefone) VALUES
 ('Maria Silva', '(11) 98765-4321'),
 ('Ana Paula', '(11) 99887-7665'),

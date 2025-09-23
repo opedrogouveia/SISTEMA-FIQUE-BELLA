@@ -1,17 +1,17 @@
-const express = require('express');
-const db = require('./database/connection');
-const authRoutes = require('./routes/auth-route');
+import "dotenv/config";
+import express from "express";
+import authRoutes from "./routes/auth-route.js";
 
 const app = express();
-const port = process.env.PORT || 3000;
+const port = process.env.PORT;
 
 app.use(express.json());
 
-app.get('/', (req, res) => {
+app.get("/", (req, res) => {
     res.send("API Fique Bella está ONLINE.");
 });
 
-app.use('/api/auth', authRoutes);
+app.use("/api/auth", authRoutes);
 
 app.listen(port, () => {
     console.log(`Servidor rodando em http://localhost:${port}`);
