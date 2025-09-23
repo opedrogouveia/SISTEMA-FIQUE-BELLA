@@ -1,4 +1,4 @@
-import { supabaseAdmin } from "../database/supabaseAdmin.js";
+import supabaseAdmin from "../database/admin-connection.js";
 
 async function verificarToken(req, res, next) {
     try {
