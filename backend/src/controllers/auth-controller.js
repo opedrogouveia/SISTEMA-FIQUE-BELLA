@@ -1,4 +1,4 @@
-import authService from "../services/auth-service.js";
+import { authService } from "../services/auth-service.js";
 
 async function login(req, res) {
     try {
@@ -27,12 +27,43 @@ async function register(req, res) {
     }
 }
 
+// async function update(req, res) {
+//     try {
+//         const authenticatedUserId = req.user.id;
+//         const targetUserId = req.params.id;
+//         const userData = req.body;
 
-const authController = {
+//         const updatedUser = await authService.update(
+//             authenticatedUserId,
+//             targetUserId,
+//             userData
+//         );
+
+//         res.status(200).json({
+//             message: "Usuário atualizado com sucesso.",
+//             user: updatedUser,
+//         });
+//     } catch (err) {
+//         res.status(err.status || 500).json({ error: err.message });
+//     }
+// }
+
+// async function remove(req, res) {
+//     try {
+//         const authenticatedUserId = req.user.id;
+//         const targetUserId = req.params.id;
+
+//         await authService.remove(authenticatedUserId, targetUserId);
+
+//         res.status(200).json({ message: "Usuário deletado com sucesso." });
+//     } catch (err) {
+//         res.status(err.status || 500).json({ error: err.message });
+//     }
+// }
+
+export const authController = {
     login,
     register,
-    update,
-    remove,
+    // update,
+    // remove,
 };
-
-export default authController;

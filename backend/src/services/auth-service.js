@@ -1,13 +1,8 @@
-import authRepository from "../repositories/auth-repository.js";
-import supabase from "../database/public-connection.js";
-import jwt from "jsonwebtoken";
-
-const secretKey = process.env.JWT_SECRET;
+import { authRepository } from "../repositories/auth-repository.js";
 
 async function login(user) {
     try {
-        const authUser = await authRepository.signIn(user);
-        return authUser;
+        return await authRepository.signIn(user);
     } catch (err) {
         throw err;
     }
@@ -27,13 +22,34 @@ async function register(user) {
     }
 }
 
+// async function update(authenticatedUserId, targetUserId, userData) {
+//     if (authenticatedUserId !== targetUserId) {
+//         const err = new Error("Acesso negado. Permissão para atualizar apenas o próprio perfil.");
+//         err.status = 403;
+//         throw err;
+//     }
 
-const authService = {
+//     delete userData.cargo;
+//     delete userData.usuario_id;
+//     delete userData.email; // Geralmente o e-mail é alterado em um fluxo separado
+
+//     return authRepository.update(targetUserId, userData);
+// }
+
+// async function remove(authenticatedUserId, targetUserId) {
+//     // REGRA DE NEGÓCIO: Um usuário só pode deletar o próprio perfil.
+//     // (Futuramente, você pode adicionar: ... && cargo !== 'admin')
+//     if (authenticatedUserId !== targetUserId) {
+//         const err = new Error("Acesso negado. Permissão para deletar apenas o próprio perfil.");
+//         err.status = 403; // Forbidden
+//         throw err;
+//     }
+//     return authRepository.remove(targetUserId);
+// }
+
+export const authService = {
     login,
     register,
-    update,
-    remove
+    // update,
+    // remove
 };
-
-
-export default authService;
