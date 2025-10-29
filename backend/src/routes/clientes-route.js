@@ -9,7 +9,7 @@ router.use(verifyToken);
 router.get("/list", clientesController.list);
 router.get("/list/:id", clientesController.getId);
 router.post("/insert", clientesController.insert);
-router.patch("/update/:id", clientesController.update);
+router.put("/update/:id", clientesController.update);
 router.delete("/remove/:id", clientesController.remove);
 
 export default router;
