@@ -18,6 +18,10 @@ app.use("/api/auth", authRoutes);
 app.use("/api/servicos", servicosRoutes);
 app.use("/api/clientes", clientesRoutes);
 app.use("/api/funcionarios", funcionariosRoutes);
+app.use(
+  "/api/agendamentos",
+  (await import("./routes/agendamento-route.js")).default
+);
 
 app.listen(port, () => {
   console.log(`Servidor rodando em http://localhost:${port}`);
