@@ -5,13 +5,15 @@ import servicosRoutes from "./routes/servicos-route.js";
 import clientesRoutes from "./routes/clientes-route.js";
 import funcionariosRoutes from "./routes/funcionarios-route.js";
 import cors from "cors";
+
 const app = express();
 const port = process.env.PORT;
 
 app.use(express.json());
 app.use(cors());
+
 app.get("/", (req, res) => {
-  res.send("API Fique Bella está ONLINE.");
+    res.send("API Fique Bella está ONLINE.");
 });
 
 app.use("/api/auth", authRoutes);
@@ -24,5 +26,5 @@ app.use(
 );
 
 app.listen(port, () => {
-  console.log(`Servidor rodando em http://localhost:${port}`);
+    console.log(`Servidor rodando em http://localhost:${port}`);
 });
