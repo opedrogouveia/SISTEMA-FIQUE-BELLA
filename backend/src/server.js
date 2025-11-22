@@ -13,7 +13,7 @@ app.use(express.json());
 app.use(cors());
 
 app.get("/", (req, res) => {
-    res.send("API Fique Bella está ONLINE.");
+  res.send("API Fique Bella está ONLINE.");
 });
 
 app.use("/api/auth", authRoutes);
@@ -21,10 +21,22 @@ app.use("/api/servicos", servicosRoutes);
 app.use("/api/clientes", clientesRoutes);
 app.use("/api/funcionarios", funcionariosRoutes);
 app.use(
+  "/api/transacoes",
+  (await import("./routes/transacao-route.js")).default
+);
+app.use(
   "/api/agendamentos",
   (await import("./routes/agendamento-route.js")).default
 );
+app.use(
+  "/api/metodo-pagamento",
+  (await import("./routes/metodo-pagamento-router.js")).default
+);
+app.use(
+  "/api/estatisticas",
+  (await import("./routes/estatisticas-route.js")).default
+);
 
 app.listen(port, () => {
-    console.log(`Servidor rodando em http://localhost:${port}`);
+  console.log(`Servidor rodando em http://localhost:${port}`);
 });

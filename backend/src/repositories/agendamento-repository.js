@@ -3,7 +3,8 @@ import { supabaseAdmin } from "../database/admin-connection.js";
 async function list() {
   const { data: agendamentos, error } = await supabaseAdmin
     .from("agendamentos")
-    .select();
+    .select()
+    .order("created_at", { ascending: false });
   if (error) throw error;
   return agendamentos;
 }
@@ -12,7 +13,8 @@ async function getId(id) {
   const { data: agendamento, error } = await supabaseAdmin
     .from("agendamentos")
     .select()
-    .eq("agendamento_id", id);
+    .eq("agendamento_id", id)
+    .single();
   if (error) throw error;
   return agendamento;
 }

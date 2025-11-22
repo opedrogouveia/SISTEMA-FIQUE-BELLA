@@ -44,10 +44,24 @@ async function remove(req, res) {
     res.status(err.status || 500).json({ error: err.message });
   }
 }
+async function updateStatus(req, res) {
+  try {
+    const agendamento = await agendamentoService.updateStatus(
+      req.params.id,
+      req.body.status,
+      req.body.metodo_pagamento_id,
+      req.body.valor_total
+    );
+    res.status(200).json(agendamento);
+  } catch (err) {
+    res.status(err.status || 500).json({ error: err.message });
+  }
+}
 export const agendamentoController = {
   list,
   getId,
   insert,
   update,
   remove,
+  updateStatus,
 };

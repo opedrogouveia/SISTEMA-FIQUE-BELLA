@@ -10,6 +10,7 @@ router.get("/list", agendamentoController.list);
 router.get("/list/:id", agendamentoController.getId);
 router.post("/insert", agendamentoController.insert);
 router.put("/update/:id", agendamentoController.update);
+router.put("/updateStatus/:id", agendamentoController.updateStatus);
 router.delete("/remove/:id", agendamentoController.remove);
 
 export default router;

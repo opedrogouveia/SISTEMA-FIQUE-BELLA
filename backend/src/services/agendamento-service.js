@@ -1,4 +1,5 @@
 import { agendamentoRepository } from "../repositories/agendamento-repository.js";
+import { transacaoService } from "./transacao-service.js";
 import { validateAgendamento } from "../schemas/agendamento-schema.js";
 
 async function list() {
@@ -24,16 +25,6 @@ async function getId(id) {
 
 async function insert(agendamento) {
   try {
-    // const valid = await agendamentoRepository.valid(
-    //   agendamento.data_hora_inicio,
-    //   agendamento.data_hora_fim,
-    //   agendamento.funcionaria_id
-    // );
-    // if (!valid) {
-    //   const err = new Error("Horário indisponível para a funcionária.");
-    //   err.status = 409;
-    //   throw err;
-    // }
     const validAgendamento = validateAgendamento.parse(agendamento);
     return await agendamentoRepository.insert(validAgendamento);
   } catch (err) {
@@ -43,16 +34,6 @@ async function insert(agendamento) {
 }
 async function update(id, agendamento) {
   try {
-    // const valid = await agendamentoRepository.valid(
-    //   agendamento.data_hora_inicio,
-    //   agendamento.data_hora_fim,
-    //   agendamento.funcionaria_id
-    // );
-    // if (!valid) {
-    //   const err = new Error("Horário indisponível para a funcionária.");
-    //   err.status = 409;
-    //   throw err;
-    // }
     const validAgendamento = validateAgendamento.parse(agendamento);
     return await agendamentoRepository.update(id, validAgendamento);
   } catch (err) {
@@ -68,10 +49,34 @@ async function remove(id) {
   }
 }
 
+async function updateStatus(id, status, metodo_pagamento_id, valor_total) {
+  try {
+    let agendamento = await getId(id);
+    agendamento.status = status;
+    const retornoAgendamento = await agendamentoRepository.update(
+      id,
+      agendamento
+    );
+    if (agendamento.status === "Concluído") {
+      const transacao = {
+        cliente_id: agendamento.cliente_id,
+        agendamento_id: agendamento.agendamento_id,
+        metodo_pagamento_id: metodo_pagamento_id,
+        valor_pago: valor_total,
+      };
+      await transacaoService.insert(transacao);
+    }
+    return retornoAgendamento;
+  } catch (err) {
+    throw err;
+  }
+}
+
 export const agendamentoService = {
   list,
   getId,
   insert,
   update,
   remove,
+  updateStatus,
 };
