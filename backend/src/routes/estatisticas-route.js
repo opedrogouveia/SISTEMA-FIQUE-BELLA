@@ -7,5 +7,6 @@ const router = Router();
 router.use(verifyToken);
 
 router.post("/dash", estatisticasController.getDadosDashboard);
+router.get("/home", estatisticasController.getDadosHome);
 
 export default router;

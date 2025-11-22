@@ -11,6 +11,14 @@ async function getDadosDashboard(req, res) {
   return res.json(data);
 }
 
+async function getDadosHome(req, res) {
+  const { data, error } = await supabaseAdmin.rpc("get_home_dashboard");
+
+  if (error) return res.status(500).json(error);
+  return res.json(data);
+}
+
 export const estatisticasController = {
   getDadosDashboard,
+  getDadosHome,
 };
